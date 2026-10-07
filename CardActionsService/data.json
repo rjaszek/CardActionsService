@@ -1,0 +1,211 @@
+{
+  "AllowedActions": [
+    {
+      "Name": "ACTION1",
+      "Conditions": {
+        "CardKind": [
+          "Prepaid",
+          "Debit",
+          "Credit"
+        ],
+        "CardStatus": {
+          "Active": "Any"
+        }
+      }
+    },
+    {
+      "Name": "ACTION2",
+      "Conditions": {
+        "CardKind": [
+          "Prepaid",
+          "Debit",
+          "Credit"
+        ],
+        "CardStatus": {
+          "Inactive": "Any"
+        }
+      }
+    },
+    {
+      "Name": "ACTION3",
+      "Conditions": {
+        "CardKind": [
+          "Prepaid",
+          "Debit",
+          "Credit"
+        ],
+        "CardStatus": {
+          "Ordered": "Any",
+          "Inactive": "Any",
+          "Active": "Any",
+          "Restricted": "Any",
+          "Blocked": "Any",
+          "Expired": "Any",
+          "Closed": "Any"
+        }
+      }
+    },
+    {
+      "Name": "ACTION4",
+      "Conditions": {
+        "CardKind": [
+          "Prepaid",
+          "Debit",
+          "Credit"
+        ],
+        "CardStatus": {
+          "Ordered": "Any",
+          "Inactive": "Any",
+          "Active": "Any",
+          "Restricted": "Any",
+          "Blocked": "Any",
+          "Expired": "Any",
+          "Closed": "Any"
+        }
+      }
+    },
+    {
+      "Name": "ACTION5",
+      "Conditions": {
+        "CardKind": [
+          "Credit"
+        ],
+        "CardStatus": {
+          "Ordered": "Any",
+          "Inactive": "Any",
+          "Active": "Any",
+          "Restricted": "Any",
+          "Blocked": "Any",
+          "Expired": "Any",
+          "Closed": "Any"
+        }
+      }
+    },
+    {
+      "Name": "ACTION6",
+      "Conditions": {
+        "CardKind": [
+          "Prepaid",
+          "Debit",
+          "Credit"
+        ],
+        "CardStatus": {
+          "Ordered": "PinSet",
+          "Inactive": "PinSet",
+          "Active": "PinSet",
+          "Blocked": "PinSet"
+        }
+      }
+    },
+    {
+      "Name": "ACTION7",
+      "Conditions": {
+        "CardKind": [
+          "Prepaid",
+          "Debit",
+          "Credit"
+        ],
+        "CardStatus": {
+          "Ordered": "PinNotSet",
+          "Inactive": "PinNotSet",
+          "Active": "PinNotSet",
+          "Blocked": "PinSet"
+        }
+      }
+    },
+    {
+      "Name": "ACTION8",
+      "Conditions": {
+        "CardKind": [
+          "Prepaid",
+          "Debit",
+          "Credit"
+        ],
+        "CardStatus": {
+          "Ordered": "Any",
+          "Inactive": "Any",
+          "Active": "Any",
+          "Blocked": "Any"
+        }
+      }
+    },
+    {
+      "Name": "ACTION9",
+      "Conditions": {
+        "CardKind": [
+          "Prepaid",
+          "Debit",
+          "Credit"
+        ],
+        "CardStatus": {
+          "Ordered": "Any",
+          "Inactive": "Any",
+          "Active": "Any",
+          "Restricted": "Any",
+          "Blocked": "Any",
+          "Expired": "Any",
+          "Closed": "Any"
+        }
+      }
+    },
+    {
+      "Name": "ACTION10",
+      "Conditions": {
+        "CardKind": [
+          "Prepaid",
+          "Debit",
+          "Credit"
+        ],
+        "CardStatus": {
+          "Ordered": "Any",
+          "Inactive": "Any",
+          "Active": "Any"
+        }
+      }
+    },
+    {
+      "Name": "ACTION11",
+      "Conditions": {
+        "CardKind": [
+          "Prepaid",
+          "Debit",
+          "Credit"
+        ],
+        "CardStatus": {
+          "Inactive": "Any",
+          "Active": "Any"
+        }
+      }
+    },
+    {
+      "Name": "ACTION12",
+      "Conditions": {
+        "CardKind": [
+          "Prepaid",
+          "Debit",
+          "Credit"
+        ],
+        "CardStatus": {
+          "Ordered": "Any",
+          "Inactive": "Any",
+          "Active": "Any"
+        }
+      }
+    },
+    {
+      "Name": "ACTION13",
+      "Conditions": {
+        "CardKind": [
+          "Prepaid",
+          "Debit",
+          "Credit"
+        ],
+        "CardStatus": {
+          "Ordered": "Any",
+          "Inactive": "Any",
+          "Active": "Any"
+        }
+      }
+    }
+  ]
+}
