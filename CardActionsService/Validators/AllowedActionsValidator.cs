@@ -10,19 +10,19 @@ namespace CardActionsService.Validators
         private static readonly string AllowedCardStatuses = string.Join(", ", Enum.GetNames<CardStatus>());
         private static readonly string AllowedPinStatuses = string.Join(", ", Enum.GetNames<PinStatus>().Where(x => x != nameof(PinStatus.Undefined)));
 
-        public ValidateOptionsResult Validate(string? name, List<AllowedAction> options)
+        public ValidateOptionsResult Validate(string? name, List<AllowedAction> allowedActions)
         {
             List<string> errors = [];
 
-            if (options.Count == 0)
+            if (allowedActions.Count == 0)
             {
                 errors.Add($"There is no allowed action or configuration section is missing, section: {AllowedAction.SectionName}");
             }
             else
             {
-                for (int actionIndex = 0; actionIndex < options.Count; actionIndex++)
+                for (int actionIndex = 0; actionIndex < allowedActions.Count; actionIndex++)
                 {
-                    var item = options[actionIndex];
+                    var item = allowedActions[actionIndex];
 
                     if (string.IsNullOrWhiteSpace(item.Name))
                     {
@@ -40,7 +40,7 @@ namespace CardActionsService.Validators
                     }
                 }
 
-                CheckDuplicates(options, errors);
+                CheckDuplicates(allowedActions, errors);
             }
 
             return errors.Count > 0
