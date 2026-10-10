@@ -10,19 +10,19 @@ namespace CardActionsService.Validators
         private static readonly string AllowedCardStatuses = string.Join(", ", Enum.GetNames<CardStatus>());
         private static readonly string AllowedPinStatuses = string.Join(", ", Enum.GetNames<PinStatus>().Where(x => x != nameof(PinStatus.Undefined)));
 
-        public ValidateOptionsResult Validate(string? name, List<AllowedAction> options)
+        public ValidateOptionsResult Validate(string? name, List<AllowedAction> allowedActions)
         {
             List<string> errors = [];
 
-            if (options.Count == 0)
+            if (allowedActions.Count == 0)
             {
                 errors.Add($"There is no allowed action or configuration section is missing, section: {AllowedAction.SectionName}");
             }
             else
             {
-                for (int actionIndex = 0; actionIndex < options.Count; actionIndex++)
+                for (int actionIndex = 0; actionIndex < allowedActions.Count; actionIndex++)
                 {
-                    var item = options[actionIndex];
+                    var item = allowedActions[actionIndex];
 
                     if (string.IsNullOrWhiteSpace(item.Name))
                     {
@@ -35,12 +35,12 @@ namespace CardActionsService.Validators
                     }
                     else
                     {
-                        CheckCardTypeSection(item.Conditions, actionIndex, errors);
-                        CheckCardStatusSection(item.Conditions, actionIndex, errors);
+                        CheckCardTypeSection(actionIndex, errors);
+                        CheckCardStatusSection(actionIndex, errors);
                     }
                 }
 
-                CheckDuplicates(options, errors);
+                CheckDuplicates(allowedActions, errors);
             }
 
             return errors.Count > 0
@@ -48,27 +48,16 @@ namespace CardActionsService.Validators
                     : ValidateOptionsResult.Success;
         }
 
-        private void CheckCardTypeSection(Conditions conditions, int i, List<string> errors)
+        private void CheckCardTypeSection(int i, List<string> errors)
         {
             IConfigurationSection cardTypeSection = config.GetSection(BuildSectionPath(Conditions.CardTypeSectionName, i));
             IReadOnlyCollection<IConfigurationSection> cardTypeSectionChildren = cardTypeSection.GetChildren().ToList();
 
             if (cardTypeSectionChildren.Count == 0)
             {
-                errors.Add($"Action {Conditions.SectionName} -> {Conditions.CardTypeSectionName} cannot be empty (action item number: {i})");
+                errors.Add($"Action {Conditions.SectionName} -> {Conditions.CardTypeSectionName} cannot be empty, (action item number: {i})");
             }
-            else if (conditions.CardTypes != null)
-            {
-                foreach (var cardType in conditions.CardTypes)
-                {
-                    if (!Enum.IsDefined<CardType>(cardType))
-                    {
-                        errors.Add($"Unknown value of Action {Conditions.SectionName} -> {Conditions.CardTypeSectionName}, allowed list: {AllowedCardTypes} (action item number: {i}, {Conditions.CardTypeSectionName}: {cardType})");
-                    }
-                }
-            }
-
-            if (cardTypeSectionChildren.Count != (conditions.CardTypes?.Count ?? 0))
+            else
             {
                 foreach (var child in cardTypeSectionChildren)
                 {
@@ -80,36 +69,16 @@ namespace CardActionsService.Validators
             }
         }
 
-        private void CheckCardStatusSection(Conditions conditions, int i, List<string> errors)
+        private void CheckCardStatusSection(int i, List<string> errors)
         {
             IConfigurationSection cardStatusSection = config.GetSection(BuildSectionPath(Conditions.CardStatusSectionName, i));
             IReadOnlyCollection<IConfigurationSection> cardStatusSectionChildren = cardStatusSection.GetChildren().ToList();
 
             if (cardStatusSectionChildren.Count == 0)
             {
-                errors.Add($"Action {Conditions.SectionName} -> {Conditions.CardStatusSectionName} cannot be empty (action item number: {i})");
+                errors.Add($"Action {Conditions.SectionName} -> {Conditions.CardStatusSectionName} cannot be empty, (action item number: {i})");
             }
-            else if (conditions.CardAndPinStatus != null)
-            {
-                foreach (var cardAndPinStatus in conditions.CardAndPinStatus)
-                {
-                    if (!Enum.IsDefined<CardStatus>(cardAndPinStatus.Key))
-                    {
-                        errors.Add($"Unknown value of Action {Conditions.SectionName} -> {Conditions.CardStatusSectionName}, allowed list: {AllowedCardStatuses} (action item number: {i}, {Conditions.CardStatusSectionName}: {cardAndPinStatus.Key})");
-                    }
-
-                    if (cardAndPinStatus.Value == PinStatus.Undefined)
-                    {
-                        errors.Add($"Action {Conditions.SectionName} -> {Conditions.CardStatusSectionName} -> PinStatus cannot be undefined, allowed list: {AllowedPinStatuses} (action item number: {i}, {Conditions.CardStatusSectionName}: {cardAndPinStatus.Key})");
-                    }
-                    else if (!Enum.IsDefined<PinStatus>(cardAndPinStatus.Value))
-                    {
-                        errors.Add($"Unknown value of Action {Conditions.SectionName} -> {Conditions.CardStatusSectionName} -> PinStatus, allowed list: {AllowedPinStatuses} (action item number: {i}, {Conditions.CardStatusSectionName}: {cardAndPinStatus.Key})");
-                    }
-                }
-            }
-
-            if (cardStatusSectionChildren.Count != (conditions.CardAndPinStatus?.Count ?? 0))
+            else
             {
                 foreach (var child in cardStatusSectionChildren)
                 {
@@ -121,6 +90,10 @@ namespace CardActionsService.Validators
                     if (!IsValidEnumName<PinStatus>(child.Value))
                     {
                         errors.Add($"Unknown value of Action {Conditions.SectionName} -> {Conditions.CardStatusSectionName} -> PinStatus, allowed list: {AllowedPinStatuses} (action item number: {i}, {Conditions.CardStatusSectionName}: {child.Key}: {child.Value})");
+                    }
+                    else if (Enum.TryParse<PinStatus>(child.Value, true, out PinStatus outVal) && outVal == PinStatus.Undefined)
+                    {
+                        errors.Add($"Action {Conditions.SectionName} -> {Conditions.CardStatusSectionName} -> PinStatus cannot be undefined, allowed list: {AllowedPinStatuses} (action item number: {i}, {Conditions.CardStatusSectionName}: {child.Key})");
                     }
                 }
             }
@@ -143,8 +116,7 @@ namespace CardActionsService.Validators
 
         private static bool IsValidEnumName<TEnum>(string? name) where TEnum : struct, Enum
         {
-            TEnum outVal;
-            return Enum.TryParse<TEnum>(name, true, out outVal) && Enum.IsDefined<TEnum>(outVal);
+            return !int.TryParse(name, out _) && Enum.TryParse<TEnum>(name, true, out TEnum outVal) && Enum.IsDefined<TEnum>(outVal);
         }
 
         private static string BuildSectionPath(string sectionName, int itemNo) => $"{AllowedAction.SectionName}:{itemNo}:{Conditions.SectionName}:{sectionName}";
