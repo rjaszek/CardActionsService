@@ -2,25 +2,16 @@ using CardActionsService.Models;
 using CardActionsService.Validators;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
-using System.Text;
+using CardActionsService.Tests.Enums;
 
 namespace CardActionsService.Tests
 {
     public class AllowedActionsValidatorTests
-    {
-        private const string ConfigFilePath = "data.json";
-
-        private enum InputType
-        {
-            String,
-            File
-        }
-
-
+    {        
         [Fact]
         public void Validate_FileConfig_Success()
         {
-            var result = GetValidateOptionsResult(ConfigFilePath, InputType.File);
+            var result = GetValidateOptionsResult(Helpers.ConfigFile, InputType.File);
             Assert.True(result.Succeeded);
         }
 
@@ -465,7 +456,7 @@ namespace CardActionsService.Tests
                 ["AllowedActions:3:Conditions:CardStatus:Inactive"] = "STOP"               
             };
 
-            ValidateOptionsResult result = GetValidateOptionsResult(ConfigFilePath, InputType.File, overrides);
+            ValidateOptionsResult result = GetValidateOptionsResult(Helpers.ConfigFile, InputType.File, overrides);
             Assert.Contains(result.Failures, f => f.Contains($"Unknown value of Action {Conditions.SectionName} -> {Conditions.CardTypeSectionName}") && f.Contains("action item number: 5"));
             Assert.Contains(result.Failures, f => f.Contains($"Unknown value of Action {Conditions.SectionName} -> {Conditions.CardStatusSectionName} -> PinStatus") && f.Contains("action item number: 3"));
         }
@@ -474,35 +465,17 @@ namespace CardActionsService.Tests
         {
             Dictionary<string, string?> overrides = [];
             overrides[key] = value;
-            return GetValidateOptionsResult(ConfigFilePath, InputType.File, overrides);
+            return GetValidateOptionsResult(Helpers.ConfigFile, InputType.File, overrides);
         }
 
         private static ValidateOptionsResult GetValidateOptionsResult(string source, InputType inputType = InputType.String, Dictionary<string, string?>? shadowCollection = null)
         {
-            IConfigurationRoot root = GetConfigurationRoot(source, inputType, shadowCollection);
+            IConfigurationRoot root = Helpers.GetConfigurationRoot(source, inputType, shadowCollection);
             List<AllowedAction> allowedActions = root.GetSection(AllowedAction.SectionName).Get<List<AllowedAction>>() ?? [];
 
             AllowedActionsValidator allowedActionsValidator = new(root);
 
             return allowedActionsValidator.Validate(null, allowedActions);
-        }
-
-        private static IConfigurationRoot GetConfigurationRoot(string source, InputType inputType, Dictionary<string,string?>? shadowCollection = null)
-        {
-            ConfigurationBuilder configurationBuilder = new();
-
-            switch (inputType)
-            {
-                case InputType.String:
-                    using (MemoryStream memoryStream = new(Encoding.UTF8.GetBytes(source)))
-                    {
-                        return configurationBuilder.AddJsonStream(memoryStream).AddInMemoryCollection(shadowCollection).Build();
-                    }
-                case InputType.File:
-                    return configurationBuilder.AddJsonFile(source).AddInMemoryCollection(shadowCollection).Build();
-                default:
-                    throw new ArgumentException("Unknown inputType");
-            }
         }
     }
 }
