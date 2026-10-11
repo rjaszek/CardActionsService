@@ -15,9 +15,9 @@ namespace CardActionsService.Services
 
             return allowedActions
                         .Where(a => a.Conditions.CardTypes.Contains(cardDetails.CardType))
-                        .Where(a => a.Conditions.CardAndPinStatus.ContainsKey(cardDetails.CardStatus))
-                        .Where(a => a.Conditions.CardAndPinStatus[cardDetails.CardStatus] == pinStatus
-                                 || a.Conditions.CardAndPinStatus[cardDetails.CardStatus] == PinStatus.Any)
+                        .Where(a => a.Conditions.CardAndPinStatuses.ContainsKey(cardDetails.CardStatus))
+                        .Where(a => a.Conditions.CardAndPinStatuses[cardDetails.CardStatus] == pinStatus
+                                 || a.Conditions.CardAndPinStatuses[cardDetails.CardStatus] == PinStatus.Any)
                         .Select(a => a.Name)
                         .ToList();
         }

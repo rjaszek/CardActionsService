@@ -13,6 +13,6 @@ namespace CardActionsService.Models
         public required List<CardType> CardTypes { get; set; }
 
         [ConfigurationKeyName(CardStatusSectionName)]
-        public required Dictionary<CardStatus, PinStatus> CardAndPinStatus { get; set; }
+        public required Dictionary<CardStatus, PinStatus> CardAndPinStatuses { get; set; }
     }
 }

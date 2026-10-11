@@ -34,7 +34,7 @@ namespace CardActionsService.Tests
             Conditions = new()
             {
                 CardTypes = cardTypes,
-                CardAndPinStatus = cardAndPinStatuses
+                CardAndPinStatuses = cardAndPinStatuses
             }
         };
     }
