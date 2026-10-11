@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="README.md" />
+  </Folder>
   <Project Path="CardActionsService.Tests/CardActionsService.Tests.csproj" Id="184a212f-fc85-44f9-b3a4-90514cbebf78" />
   <Project Path="CardActionsService/CardActionsService.csproj" />
 </Solution>
