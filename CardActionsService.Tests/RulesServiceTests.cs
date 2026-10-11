@@ -150,7 +150,7 @@ namespace CardActionsService.Tests
         [Theory]
         [InlineData(true, new[] { "ACTION3", "ACTION4", "ACTION5", "ACTION6", "ACTION7", "ACTION8", "ACTION9" })]
         [InlineData(false, new[] { "ACTION3", "ACTION4", "ACTION5", "ACTION8", "ACTION9" })]
-        public void GetActions_CreditBlockedFromFileConfig_MatchResult(bool isPinSet, string[] expectedResults)
+        public void GetActions_CreditBlockedFromFileConfig_ReturnsTaskExampleActions(bool isPinSet, string[] expectedResults)
         {
             IConfigurationRoot root = Helpers.GetConfigurationRoot(Helpers.ConfigFile, InputType.File);
             List<AllowedAction>? allowedActions = root.GetSection(AllowedAction.SectionName).Get<List<AllowedAction>>();

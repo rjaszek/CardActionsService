@@ -5,7 +5,7 @@ namespace CardActionsService.Tests.Fakes
 {
     public class FakeOptionsMonitor : IOptionsMonitor<List<AllowedAction>>
     {
-        public List<AllowedAction> CurrentValue {  get; set; }
+        public List<AllowedAction> CurrentValue { get; set; }
 
         public FakeOptionsMonitor(List<AllowedAction> allowedActions) => CurrentValue = allowedActions;
 
