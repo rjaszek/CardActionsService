@@ -12,11 +12,13 @@ namespace CardActionsService.Controllers
         private readonly IRulesService _rulesService = rulesService;
 
         /// <summary>
-        /// Gets the actions.
+        /// Gets the actions allowed to be done on user's payment card.
         /// </summary>
         /// <param name="userId">The user identifier.</param>
         /// <param name="cardNumber">The card number.</param>
         /// <returns>List of actions or error code</returns>
+        /// <response code="200">List of actions found - can be empty</response> 
+        /// <response code="404">Card for user not found</response>
         [HttpGet("users/{userId}/cards/{cardNumber}/actions")]
         [ProducesResponseType<IEnumerable<string>>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
